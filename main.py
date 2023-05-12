@@ -34,7 +34,6 @@ def ReadCsv(filename="calculo.csv"):  # Leer el archivo csv
     import csv
     with open(filename, 'r') as csvfile:
         file = csv.reader(csvfile, delimiter=',')
-        file.__next__()
         for row in file:
             row[0] = int(row[0])
             row[1] = float(row[1])
