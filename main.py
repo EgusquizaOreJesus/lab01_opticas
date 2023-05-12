@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def GenerateSimplePlot(mass_array, frequency_array, img_name="mass_freq.png"):  # Generar la imagen sin el ajuste
+def GenerateSimplePlot(mass_array, frequency_array, img_name="frecuencia_vs_masa.png"):  # Generar la imagen sin el ajuste
     plt.plot(mass_array, frequency_array)
 
     plt.plot(mass_array, frequency_array, 'ro')   # Crear el grafico, en el eje x la masa y en el eje y la frecuencia
@@ -10,7 +10,7 @@ def GenerateSimplePlot(mass_array, frequency_array, img_name="mass_freq.png"):  
     plt.title('Frecuencia VS Masa')
     plt.savefig("images/" + img_name)
     plt.close()
-def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="linear_regression.png"):
+def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuencia_vs_masa_linear_regression.png"):
     # Ajuste de regresión lineal
     coefficients = np.polyfit(mass_array, frequency_array, 1)
     m, b = coefficients
@@ -46,5 +46,5 @@ if __name__ == '__main__':  # Inicializar el programa
     x = data_matrix[:, 0]
     y = data_matrix[:, 1]
 
-    GenerateSimplePlot(x, y, "mass_freq_random.png")
-    GenerateLinearRegressionPlot(x,y,"linear_regression.png")
+    GenerateSimplePlot(x, y, "frecuencia_vs_masa.png")
+    GenerateLinearRegressionPlot(x,y,"frecuencia_vs_masa_linear_regression.png")
