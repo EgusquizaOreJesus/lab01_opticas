@@ -1,16 +1,15 @@
-
 # Importamos librerias
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize as opt
 from sklearn.metrics import r2_score
+from scipy.optimize import curve_fit
 
 # Definimos funciones
 def GeneratePlotsinAjuste(mass_array, frequency_array, img_name="frecuencia_vs_masa.png"):  # Generar la imagen sin el ajuste
     plt.plot(mass_array, frequency_array)
     plt.plot(mass_array, frequency_array, 'ro')   # Crear el grafico, en el eje "x": la masa y en el eje "y": la frecuencia
-    plt.xlabel('masa')
-    plt.ylabel('frecuencia')
+    plt.xlabel('Masas (Kg)')
+    plt.ylabel('Frecuencias (Hz)')
     plt.title('Frecuencia VS Masa')
     plt.savefig("images/" + img_name)               # Guarda la imagen de la grafica
     plt.close()
@@ -22,10 +21,10 @@ def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuenc
     # Calcular los valores de "y" para la línea de regresión
     line_fit = m * np.array(mass_array) + b                         # Genero la funcion lineal que me botara las frecuencias ajustadas linealmente
     # Crear el gráfico con el ajuste de regresión lineal
-    plt.plot(mass_array, frequency_array, 'ro', label='Datos')       # Grafico la masa y frecuencia original
-    plt.plot(mass_array, line_fit, label='Regresión lineal')         # Grafico la masa, y la frecuencia ajustada a una regresion lineak
-    plt.xlabel('masa')
-    plt.ylabel('frecuencia')
+    plt.plot(mass_array, frequency_array, 'ro')       # Grafico la masa y frecuencia original
+    plt.plot(mass_array, line_fit, label='Ajuste de regresión lineal')         # Grafico la masa, y la frecuencia ajustada a una regresion lineak
+    plt.xlabel('Masas (Kg)')
+    plt.ylabel('Frecuencias (Hz)')
     plt.title('Frecuencia VS Masa - ajuste de regresión lineal')
     plt.legend()
     plt.savefig("images/" + img_name)
@@ -36,8 +35,7 @@ def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuenc
     print("m = " + str(m))
     print("b = " + str(b))
     r2 = r2_score(frequency_array, line_fit)
-    print("COEFICIENTE DE DETERMINACION r^2:")
-    print(f"r^2 = {r2}\n")
+    print(f"Coeficiente de determinación (R²): {r2}\n")
     plt.close()
 
 def GenerateCuadraticaRegressionPlot(mass_array, frequency_array, img_name="cuadratica_regression.png"):
@@ -51,8 +49,8 @@ def GenerateCuadraticaRegressionPlot(mass_array, frequency_array, img_name="cuad
     # Graficar el ajuste de regresión cuadrática
     plt.plot(masas_fit, frecuencias_fit, label='Ajuste de regresión cuadrática')        # Grafico la masa uniforme, y la frecuencia ajustada a una regresion cuadratica
     plt.plot(mass_array, frequency_array, 'ro')                                         # Grafico la masa y frecuencia original
-    plt.xlabel('Masas')
-    plt.ylabel('Frecuencias')
+    plt.xlabel('Masas (Kg)')
+    plt.ylabel('Frecuencias (Hz)')
     plt.title('Ajuste de regresión cuadrática')
     plt.legend()
     plt.savefig("images/" + img_name)
@@ -64,28 +62,43 @@ def GenerateCuadraticaRegressionPlot(mass_array, frequency_array, img_name="cuad
     print("a = " +str(coef[0]))
     print("b = " +str(coef[1]))
     print("c = " +str(coef[2]))
-    print("COEFICIENTE DE DETERMINACION r^2:")
-    print(f"r^2 = {r2}")
+    print(f"Coeficiente de determinación (R²): {r2}\n")
     plt.close()
 
-def ReadCsv(filename="calculo.csv"):  # Leer el archivo csv
-    data_matrix = []
-
-    import csv
-    with open(filename, 'r') as csvfile:
-        file = csv.reader(csvfile, delimiter=',')
-        for row in file:
-            row[0] = int(row[0])
-            row[1] = float(row[1])
-            data_matrix.append(row)
-
-    return np.array(data_matrix)  # Convertir el archivo a una matriz
+def exponential_func(x, a, b, c):
+    return a * np.exp(b * x) + c
+def GenerateRegressionNoLineal(mass_array, frequency_array, img_name="exponencial_regresion_exponencial.png"):
+    popt, _ = curve_fit(exponential_func, mass_array, frequency_array)
+    # Valores para la curva ajustada
+    frecuencias_fit = exponential_func(mass_array, *popt)
+    # Gráfico de los datos y la curva ajustada
+    plt.plot(mass_array, frecuencias_fit, label='Ajuste de regresión no lineal')
+    plt.plot(mass_array, frequency_array, 'ro')
+    plt.xlabel('Masas (Kg)')
+    plt.ylabel('Frecuencias (Hz)')
+    plt.title('Ajuste de regresión no lineal - Función exponencial')
+    plt.legend()
+    plt.savefig("images/" + img_name)
+    r2 = r2_score(frequency_array,  frecuencias_fit)
+    print("Ajuste Regresion No Lineal - Exponencial:")
+    print("y = a * e^(bx) + c")
+    print("y = " + str(popt[0]) + " * e^(" + str(popt[1]) + "x) + " + str(popt[2]))
+    print("Parametros de ajuste:")
+    print("a = " +str(popt[0]))
+    print("b = " +str(popt[1]))
+    print("c = " +str(popt[2]))
+    print(f"Coeficiente de determinación (R²): {r2}\n")
+    plt.close()
 
 if __name__ == '__main__':  # Inicializar el programa
     data_matrix = np.loadtxt('datos.txt', delimiter=',')
-    x = data_matrix[:, 0]
-    y = data_matrix[:, 1]
+    x = data_matrix[:, 0]       # masas de la data (g.)
+    x_kg = x/1000               # por conveniencia y para que al modelar la exponencial no haya desbordamiento de datos lo pasaremos todo a kg,
+                                #  aunque en gramos es lo mismo ya que tienen el mismo R² y misma grafica
+    y = data_matrix[:, 1]       # frecuencias de la data (Hz)
+    import pylatexenc
 
-    GeneratePlotsinAjuste(x, y, "frecuencia_vs_masa.png")
-    GenerateLinearRegressionPlot(x,y,"linear_regression.png")
-    GenerateCuadraticaRegressionPlot(x,y,"cuadratica_regresion.png")
+    GeneratePlotsinAjuste(x_kg, y, "frecuencia_vs_masa.png")
+    GenerateLinearRegressionPlot(x_kg,y,"linear_regression.png")
+    GenerateCuadraticaRegressionPlot(x_kg,y,"cuadratica_regresion.png")
+    GenerateRegressionNoLineal(x_kg,y,"exponencial_regresion_exponencial.png")
