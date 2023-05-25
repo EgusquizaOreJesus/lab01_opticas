@@ -15,7 +15,7 @@ def GeneratePlotsinAjuste(mass_array, frequency_array, img_name="frecuencia_vs_m
     plt.savefig("images/" + img_name)               # Guarda la imagen de la grafica
     plt.close()
 
-def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="linear_regression.png"):
+def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuencia_vs_masa_linear_regression.png"):
     # Ajuste de regresión lineal
     coefficients = np.polyfit(mass_array, frequency_array, 1)       # con polyfit genero un ajuste de regresion lineal (1) a mis datos
     m, b = coefficients
@@ -30,7 +30,11 @@ def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="linear_r
     plt.legend()
     plt.savefig("images/" + img_name)
     print("Ajuste Regresion Lineal:")
+    print("y = mx + b")
     print("y = " + str(m) + "x + " + str(b))
+    print("Parametros de ajuste:")
+    print("m = " + str(m))
+    print("b = " + str(b))
     r2 = r2_score(frequency_array, line_fit)
     print("COEFICIENTE DE DETERMINACION r^2:")
     print(f"r^2 = {r2}\n")
@@ -54,10 +58,28 @@ def GenerateCuadraticaRegressionPlot(mass_array, frequency_array, img_name="cuad
     plt.savefig("images/" + img_name)
     r2 = r2_score(frequency_array,  p(mass_array))
     print("Ajuste Regresion Cuadratica:")
+    print("y = ax^2 + bx + c")
     print("y = " + str(coef[0]) + "x^2 - " + str(-1*coef[1]) + "x + " + str(coef[2]))
+    print("Parametros de ajuste:")
+    print("a = " +str(coef[0]))
+    print("b = " +str(coef[1]))
+    print("c = " +str(coef[2]))
     print("COEFICIENTE DE DETERMINACION r^2:")
     print(f"r^2 = {r2}")
     plt.close()
+
+def ReadCsv(filename="calculo.csv"):  # Leer el archivo csv
+    data_matrix = []
+
+    import csv
+    with open(filename, 'r') as csvfile:
+        file = csv.reader(csvfile, delimiter=',')
+        for row in file:
+            row[0] = int(row[0])
+            row[1] = float(row[1])
+            data_matrix.append(row)
+
+    return np.array(data_matrix)  # Convertir el archivo a una matriz
 
 if __name__ == '__main__':  # Inicializar el programa
     data_matrix = np.loadtxt('datos.txt', delimiter=',')
