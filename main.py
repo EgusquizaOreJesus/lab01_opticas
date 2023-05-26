@@ -11,7 +11,7 @@ def GeneratePlotsinAjuste(mass_array, frequency_array, img_name="frecuencia_vs_m
     plt.xlabel('Masas (Kg)')
     plt.ylabel('Frecuencias (Hz)')
     plt.title('Frecuencia VS Masa')
-    plt.savefig("images/" + img_name)               # Guarda la imagen de la grafica
+    plt.savefig(img_name)               # Guarda la imagen de la grafica
     plt.close()
 
 def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuencia_vs_masa_linear_regression.png"):
@@ -27,7 +27,7 @@ def GenerateLinearRegressionPlot(mass_array, frequency_array, img_name="frecuenc
     plt.ylabel('Frecuencias (Hz)')
     plt.title('Frecuencia VS Masa - ajuste de regresión lineal')
     plt.legend()
-    plt.savefig("images/" + img_name)
+    plt.savefig(img_name)
     print("Ajuste Regresion Lineal:")
     print("y = mx + b")
     print("y = " + str(m) + "x + " + str(b))
@@ -53,7 +53,7 @@ def GenerateCuadraticaRegressionPlot(mass_array, frequency_array, img_name="cuad
     plt.ylabel('Frecuencias (Hz)')
     plt.title('Ajuste de regresión cuadrática')
     plt.legend()
-    plt.savefig("images/" + img_name)
+    plt.savefig(img_name)
     r2 = r2_score(frequency_array,  p(mass_array))
     print("Ajuste Regresion Cuadratica:")
     print("y = ax^2 + bx + c")
@@ -78,7 +78,7 @@ def GenerateRegressionNoLineal(mass_array, frequency_array, img_name="exponencia
     plt.ylabel('Frecuencias (Hz)')
     plt.title('Ajuste de regresión no lineal - Función exponencial')
     plt.legend()
-    plt.savefig("images/" + img_name)
+    plt.savefig(img_name)
     r2 = r2_score(frequency_array,  frecuencias_fit)
     print("Ajuste Regresion No Lineal - Exponencial:")
     print("y = a * e^(bx) + c")
